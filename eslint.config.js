@@ -1,28 +1,37 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import eslintPluginPrettier from 'eslint-plugin-prettier';
 
-export default tseslint.config(
-  { ignores: ['dist'] },
+/** @type {import('eslint').Linter.Config[]} */
+export default [
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
       globals: globals.browser,
     },
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      prettier: eslintPluginPrettier,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
+      'prettier/prettier': [
+        'error',
+        {
+          singleQuote: true,
+          jsxSingleQuote: true,
+          trailingComma: 'all',
+          arrowParens: 'avoid',
+        },
       ],
+      'react/react-in-jsx-scope': 'off',
+      '@typescript-eslint/indent': 'off',
+      '@typescript-eslint/naming-convention': 'off',
+      'react/destructuring-assignment': 'off',
+      'react/prop-types': 'off',
+      'react/jsx-fragments': ['off'],
+      'react/require-default-props': 'off',
     },
   },
-)
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
+];
